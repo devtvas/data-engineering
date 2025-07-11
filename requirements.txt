@@ -1,0 +1,20 @@
+# Database (Core - sem Airflow para evitar conflitos)
+psycopg2-binary==2.9.9
+python-dotenv==1.0.0
+sqlalchemy>=1.4.28,<2.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.24.3
+requests==2.31.0
+
+# Data Analysis
+jupyter==1.0.0
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# Development
+python-decouple==3.8
+
+# ETL & Pipeline (opcional - instalar separadamente se necessário)
+# apache-airflow==2.7.3
