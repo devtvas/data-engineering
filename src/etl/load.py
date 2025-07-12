@@ -161,8 +161,13 @@ class DataLoader:
             logger.error(f"Failed to load regional aggregates: {e}")
             raise
     
-    def load_product_aggregates(self, data: List[Dict[str, Any]], confirm_delete: bool = False) -> int:
-        """Load product aggregates into the database."""
+    def load_product_aggregates(self, data: List[Dict[str, Any]], confirm_delete: bool = True) -> int:
+        """Load product aggregates into the database.
+        
+        Args:
+            data (List[Dict[str, Any]]): List of product aggregate records to load.
+            confirm_delete (bool): If True, clears existing data in the product_aggregates table. Defaults to True.
+        """
         logger.info(f"Loading {len(data)} product aggregates into database")
         
         # Clear existing data
