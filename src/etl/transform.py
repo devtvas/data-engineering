@@ -84,16 +84,17 @@ class DataTransformer:
                     'total_sales': 0,
                     'total_revenue': 0.0,
                     'total_quantity': 0,
-                    'product_count': 0
+                    'product_count': set()
                 }
             
             region_aggregates[region]['total_sales'] += 1
             region_aggregates[region]['total_revenue'] += record['sales_amount']
             region_aggregates[region]['total_quantity'] += record['quantity']
-            region_aggregates[region]['product_count'] += 1
+            region_aggregates[region]['product_count'].add(record['product_name'])
         
         # Calculate averages
         for region_data in region_aggregates.values():
+            region_data['product_count'] = len(region_data['product_count'])
             region_data['avg_sale_amount'] = (
                 region_data['total_revenue'] / region_data['total_sales']
                 if region_data['total_sales'] > 0 else 0
