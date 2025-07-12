@@ -93,10 +93,9 @@ class DataLoader:
         ON CONFLICT DO NOTHING;
         """
         
-        loaded_count = 0
         try:
-            for record in data:
-                self.db.execute_command(insert_query, (
+            records_to_insert = [
+                (
                     record['product_name'],
                     record['sales_amount'],
                     record['sale_date'],
@@ -117,12 +116,21 @@ class DataLoader:
             logger.error(f"Failed to load sales data: {e}")
             raise
     
-    def load_region_aggregates(self, data: List[Dict[str, Any]]) -> int:
-        """Load regional aggregates into the database."""
+    def load_region_aggregates(self, data: List[Dict[str, Any]], confirm_delete: bool = False) -> int:
+        """Load regional aggregates into the database.
+        
+        Args:
+            data (List[Dict[str, Any]]): List of regional aggregate records to load.
+            confirm_delete (bool): If True, clears existing data in the region_aggregates table.
+        """
         logger.info(f"Loading {len(data)} regional aggregates into database")
         
-        # Clear existing data
-        self.db.execute_command("DELETE FROM region_aggregates;")
+        # Clear existing data if confirmed
+        if confirm_delete:
+            logger.warning("Clearing all data from region_aggregates table")
+            self.db.execute_command("DELETE FROM region_aggregates;")
+        else:
+            logger.info("Skipping deletion of existing data in region_aggregates table")
         
         insert_query = """
         INSERT INTO region_aggregates 
@@ -152,12 +160,22 @@ class DataLoader:
             logger.error(f"Failed to load regional aggregates: {e}")
             raise
     
-    def load_product_aggregates(self, data: List[Dict[str, Any]]) -> int:
-        """Load product aggregates into the database."""
+    def load_product_aggregates(self, data: List[Dict[str, Any]], confirm_delete: bool = True) -> int:
+        """Load product aggregates into the database.
+        
+        Args:
+            data (List[Dict[str, Any]]): List of product aggregate records to load.
+            confirm_delete (bool): If True, clears existing data in the product_aggregates table. Defaults to True.
+        """
         logger.info(f"Loading {len(data)} product aggregates into database")
         
         # Clear existing data
-        self.db.execute_command("DELETE FROM product_aggregates;")
+        if confirm_delete:
+            logger.warning("Deleting all data from product_aggregates table. This operation is destructive.")
+            self.db.execute_command("DELETE FROM product_aggregates;")
+        else:
+            logger.error("Delete operation not confirmed. Aborting.")
+            raise ValueError("Delete operation requires explicit confirmation.")
         
         insert_query = """
         INSERT INTO product_aggregates 

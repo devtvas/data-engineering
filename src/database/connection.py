@@ -10,8 +10,7 @@ from contextlib import contextmanager
 from typing import Generator, Any, Dict, List
 from src.config.database import get_database_config
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Configure logger
 logger = logging.getLogger(__name__)
 
 
