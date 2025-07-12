@@ -40,8 +40,7 @@ class DataExtractor:
         """Generate sample sales data for demonstration purposes."""
         logger.info("Generating sample sales data")
         
-        import random
-        from datetime import datetime, timedelta
+        # Removed redundant imports for random and datetime
         
         products = [
             "Laptop", "Desktop", "Mouse", "Keyboard", "Monitor", 
