@@ -152,12 +152,17 @@ class DataLoader:
             logger.error(f"Failed to load regional aggregates: {e}")
             raise
     
-    def load_product_aggregates(self, data: List[Dict[str, Any]]) -> int:
+    def load_product_aggregates(self, data: List[Dict[str, Any]], confirm_delete: bool = False) -> int:
         """Load product aggregates into the database."""
         logger.info(f"Loading {len(data)} product aggregates into database")
         
         # Clear existing data
-        self.db.execute_command("DELETE FROM product_aggregates;")
+        if confirm_delete:
+            logger.warning("Deleting all data from product_aggregates table. This operation is destructive.")
+            self.db.execute_command("DELETE FROM product_aggregates;")
+        else:
+            logger.error("Delete operation not confirmed. Aborting.")
+            raise ValueError("Delete operation requires explicit confirmation.")
         
         insert_query = """
         INSERT INTO product_aggregates 
