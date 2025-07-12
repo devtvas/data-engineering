@@ -117,12 +117,21 @@ class DataLoader:
             logger.error(f"Failed to load sales data: {e}")
             raise
     
-    def load_region_aggregates(self, data: List[Dict[str, Any]]) -> int:
-        """Load regional aggregates into the database."""
+    def load_region_aggregates(self, data: List[Dict[str, Any]], confirm_delete: bool = False) -> int:
+        """Load regional aggregates into the database.
+        
+        Args:
+            data (List[Dict[str, Any]]): List of regional aggregate records to load.
+            confirm_delete (bool): If True, clears existing data in the region_aggregates table.
+        """
         logger.info(f"Loading {len(data)} regional aggregates into database")
         
-        # Clear existing data
-        self.db.execute_command("DELETE FROM region_aggregates;")
+        # Clear existing data if confirmed
+        if confirm_delete:
+            logger.warning("Clearing all data from region_aggregates table")
+            self.db.execute_command("DELETE FROM region_aggregates;")
+        else:
+            logger.info("Skipping deletion of existing data in region_aggregates table")
         
         insert_query = """
         INSERT INTO region_aggregates 
