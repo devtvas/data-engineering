@@ -93,10 +93,9 @@ class DataLoader:
         ON CONFLICT DO NOTHING;
         """
         
-        loaded_count = 0
         try:
-            for record in data:
-                self.db.execute_command(insert_query, (
+            records_to_insert = [
+                (
                     record['product_name'],
                     record['sales_amount'],
                     record['sale_date'],
